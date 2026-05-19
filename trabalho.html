@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trabalho | Clareando</title>
+  <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-content">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger">☰</button>
+      <span class="topbar-title">💼 Trabalho</span>
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbar-date"></span>
+        <button class="btn btn-primary btn-sm" id="btn-nova-demanda">+ Nova demanda</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="page-header">
+        <h1>Trabalho</h1>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid-3" style="margin-bottom:24px;">
+        <div class="stat-card">
+          <div class="stat-label">A Fazer</div>
+          <div class="stat-value stat-amber" id="cnt-afazer">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Em Andamento</div>
+          <div class="stat-value stat-blue" id="cnt-andamento">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Concluídas</div>
+          <div class="stat-value stat-green" id="cnt-concluido">0</div>
+        </div>
+      </div>
+
+      <!-- Kanban -->
+      <div class="kanban-board">
+        <div class="kanban-col">
+          <div class="kanban-col-head">
+            📋 A Fazer <span class="col-badge" id="badge-afazer">0</span>
+          </div>
+          <div id="col-afazer"><div class="loading-state"><div class="spinner"></div></div></div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-head">
+            ⚡ Em Andamento <span class="col-badge" id="badge-andamento">0</span>
+          </div>
+          <div id="col-andamento"></div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-head">
+            ✅ Concluído <span class="col-badge" id="badge-concluido">0</span>
+          </div>
+          <div id="col-concluido"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal nova demanda -->
+<div class="modal-overlay" id="modal-demanda">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Nova demanda</h2>
+      <button class="btn-icon" id="modal-dem-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="dem-nome">Demanda</label>
+        <input type="text" id="dem-nome" placeholder="Ex: Revisar relatório Q2…">
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label for="dem-prio">Prioridade</label>
+          <select id="dem-prio">
+            <option value="baixa">🟢 Baixa</option>
+            <option value="media" selected>🟡 Média</option>
+            <option value="alta">🔴 Alta</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="dem-prazo">Prazo (opcional)</label>
+          <input type="date" id="dem-prazo">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="dem-desc">Descrição (opcional)</label>
+        <input type="text" id="dem-desc" placeholder="Contexto ou detalhes…">
+      </div>
+      <button class="btn btn-primary" id="btn-salvar-dem" style="width:100%;">+ Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="src/js/sidebar.js"></script>
+<script src="src/js/firebase-config.js"></script>
+<script src="src/js/utils.js"></script>
+<script src="src/js/trabalho.js"></script>
+</body>
+</html>

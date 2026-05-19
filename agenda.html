@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda | Clareando</title>
+  <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-content">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger">☰</button>
+      <span class="topbar-title">📅 Agenda</span>
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbar-date"></span>
+        <button class="btn btn-primary btn-sm" id="btn-novo-evento">+ Novo evento</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="page-header" style="margin-bottom:16px;">
+        <h1>Agenda</h1>
+      </div>
+
+      <div class="tabs-bar">
+        <button class="tab-btn active" data-tab="mensal">📆 Mensal</button>
+        <button class="tab-btn" data-tab="anual">🗓️ Anual</button>
+      </div>
+
+      <!-- TAB MENSAL -->
+      <div class="tab-panel active" id="tab-mensal">
+        <div class="agenda-split">
+          <!-- Calendário -->
+          <div class="card">
+            <div class="cal-nav">
+              <button class="cal-nav-btn" id="mes-ant">‹</button>
+              <h3 id="cal-mes-ano"></h3>
+              <button class="cal-nav-btn" id="mes-prox">›</button>
+            </div>
+            <div class="cal-weekdays">
+              <div>Dom</div><div>Seg</div><div>Ter</div>
+              <div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+
+            <!-- Agenda do dia -->
+            <div id="dia-wrap" style="display:none;">
+              <div class="agenda-dia-wrap">
+                <div class="agenda-dia-titulo">
+                  <span id="dia-titulo"></span>
+                  <button class="btn btn-primary btn-xs" id="btn-add-dia">+ Evento</button>
+                </div>
+                <div id="dia-content"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Próximos -->
+          <div class="card">
+            <div class="card-title">📌 Próximos eventos</div>
+            <div id="lista-proximos"><div class="loading-state"><div class="spinner"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB ANUAL -->
+      <div class="tab-panel" id="tab-anual">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+          <button class="cal-nav-btn" id="ano-ant">‹</button>
+          <h2 id="ano-titulo" style="font-family:var(--font-display);font-size:1.4rem;font-weight:700;"></h2>
+          <button class="cal-nav-btn" id="ano-prox">›</button>
+        </div>
+        <div class="ano-grid" id="ano-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal novo evento -->
+<div class="modal-overlay" id="modal-evento">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Novo evento</h2>
+      <button class="btn-icon" id="modal-ev-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="ev-titulo">Título</label>
+        <input type="text" id="ev-titulo" placeholder="Ex: Reunião, Prova, Consulta…">
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label for="ev-data">Data</label>
+          <input type="date" id="ev-data">
+        </div>
+        <div class="form-group">
+          <label for="ev-cat">Categoria</label>
+          <select id="ev-cat">
+            <option value="pessoal">🟢 Pessoal</option>
+            <option value="importante">🟠 Importante</option>
+            <option value="urgente">🔴 Urgente</option>
+            <option value="faculdade">🔵 Faculdade</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="ev-dia-todo" style="width:auto;accent-color:var(--green);"> &nbsp;Dia todo (sem horário específico)
+        </label>
+      </div>
+      <div id="horario-fields" class="form-row cols-2">
+        <div class="form-group">
+          <label for="ev-inicio">Horário início</label>
+          <input type="time" id="ev-inicio">
+        </div>
+        <div class="form-group">
+          <label for="ev-fim">Horário fim</label>
+          <input type="time" id="ev-fim">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="ev-obs">Observação (opcional)</label>
+        <input type="text" id="ev-obs" placeholder="Detalhes adicionais…">
+      </div>
+      <button class="btn btn-primary" id="btn-salvar-ev" style="width:100%;">+ Salvar evento</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="src/js/sidebar.js"></script>
+<script src="src/js/firebase-config.js"></script>
+<script src="src/js/utils.js"></script>
+<script src="src/js/agenda.js"></script>
+</body>
+</html>

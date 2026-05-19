@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financeiro | Clareando</title>
+  <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-content">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger">☰</button>
+      <span class="topbar-title">💰 Financeiro</span>
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbar-date"></span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <select id="sel-mes" style="width:auto;font-size:.82rem;padding:6px 24px 6px 10px;border-radius:8px;"></select>
+          <select id="sel-ano" style="width:auto;font-size:.82rem;padding:6px 24px 6px 10px;border-radius:8px;"></select>
+        </div>
+        <button class="btn btn-primary btn-sm" id="btn-novo-lanc">+ Lançamento</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="page-header"><h1>Financeiro</h1></div>
+
+      <!-- KPIs -->
+      <div class="kpi-row">
+        <div class="kpi-card receita">
+          <div class="kpi-label">Receitas</div>
+          <div class="kpi-value" id="kpi-receita">R$ 0</div>
+          <p class="kpi-sub" id="kpi-receita-sub">0 lançamentos</p>
+        </div>
+        <div class="kpi-card despesa">
+          <div class="kpi-label">Despesas</div>
+          <div class="kpi-value" id="kpi-despesa">R$ 0</div>
+          <p class="kpi-sub" id="kpi-despesa-sub">0 lançamentos</p>
+        </div>
+        <div class="kpi-card result">
+          <div class="kpi-label">Resultado</div>
+          <div class="kpi-value" id="kpi-result">R$ 0</div>
+          <p class="kpi-sub">Saldo do mês</p>
+        </div>
+      </div>
+
+      <div class="tabs-bar">
+        <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+        <button class="tab-btn" data-tab="lancamentos">📋 Lançamentos</button>
+        <button class="tab-btn" data-tab="fixos">📌 Fixas</button>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="tab-panel active" id="tab-dashboard">
+        <div class="grid-2" style="gap:20px;">
+          <div class="card">
+            <div class="card-title">Fluxo por categoria — <span id="chart-label"></span></div>
+            <div class="bar-chart-wrap" id="bar-chart"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Despesas por categoria</div>
+            <div id="cat-breakdown"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lançamentos -->
+      <div class="tab-panel" id="tab-lancamentos">
+        <div class="filtros-row">
+          <select id="fil-tipo"><option value="">Todos</option><option value="entrada">↑ Entradas</option><option value="saida">↓ Saídas</option></select>
+          <select id="fil-cat"><option value="">Todas as categorias</option></select>
+          <span id="fil-count" style="margin-left:auto;font-size:.82rem;color:var(--muted);"></span>
+        </div>
+        <div class="excel-wrap">
+          <table class="excel-table">
+            <thead>
+              <tr>
+                <th>Descrição</th><th>Valor</th><th>Tipo</th><th>Categoria</th><th>Data</th><th style="width:36px;"></th>
+              </tr>
+            </thead>
+            <tbody id="tabela-lanc"><tr><td colspan="6" style="padding:20px;"><div class="loading-state"><div class="spinner"></div></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Fixas -->
+      <div class="tab-panel" id="tab-fixos">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+          <p style="margin:0;font-size:.86rem;color:var(--muted);">Contas que se repetem todo mês.</p>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" id="btn-replicar">🔄 Replicar para este mês</button>
+            <button class="btn btn-primary btn-sm" id="btn-nova-fixa">+ Nova fixa</button>
+          </div>
+        </div>
+        <div class="excel-wrap">
+          <table class="excel-table">
+            <thead><tr><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Categoria</th><th style="width:36px;"></th></tr></thead>
+            <tbody id="tabela-fixas"><tr><td colspan="5" style="padding:20px;"><div class="loading-state"><div class="spinner"></div></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal lançamento -->
+<div class="modal-overlay" id="modal-lanc">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Novo lançamento</h2>
+      <button class="btn-icon" id="modal-lanc-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Descrição</label>
+        <input type="text" id="lanc-desc" placeholder="Ex: Salário, mercado, Netflix…">
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label>Valor (R$)</label>
+          <input type="number" id="lanc-valor" placeholder="0,00" min="0" step="0.01">
+        </div>
+        <div class="form-group">
+          <label>Tipo</label>
+          <select id="lanc-tipo"><option value="entrada">↑ Entrada</option><option value="saida">↓ Saída</option></select>
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label>Categoria</label>
+          <select id="lanc-cat"></select>
+        </div>
+        <div class="form-group">
+          <label>Data</label>
+          <input type="date" id="lanc-data">
+        </div>
+      </div>
+      <div class="form-group">
+        <label><input type="checkbox" id="lanc-fixa" style="width:auto;accent-color:var(--green);"> &nbsp;Salvar como conta fixa também</label>
+      </div>
+      <button class="btn btn-primary" id="btn-salvar-lanc" style="width:100%;">+ Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal conta fixa -->
+<div class="modal-overlay" id="modal-fixa">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Nova conta fixa</h2>
+      <button class="btn-icon" id="modal-fixa-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>Descrição</label><input type="text" id="fixa-desc" placeholder="Ex: Aluguel, Netflix…"></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Valor (R$)</label><input type="number" id="fixa-valor" min="0" step="0.01"></div>
+        <div class="form-group"><label>Dia vencimento</label><input type="number" id="fixa-venc" min="1" max="31" placeholder="Ex: 5"></div>
+      </div>
+      <div class="form-group"><label>Categoria</label><select id="fixa-cat"></select></div>
+      <button class="btn btn-primary" id="btn-salvar-fixa" style="width:100%;">Salvar conta fixa</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="src/js/sidebar.js"></script>
+<script src="src/js/firebase-config.js"></script>
+<script src="src/js/utils.js"></script>
+<script src="src/js/financeiro.js"></script>
+</body>
+</html>

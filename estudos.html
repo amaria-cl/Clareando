@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estudos | Clareando</title>
+  <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="main-content">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger">☰</button>
+      <span class="topbar-title">📚 Estudos</span>
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbar-date"></span>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="page-header">
+        <h1>Estudos</h1>
+        <div class="page-header-actions">
+          <button class="btn btn-primary" id="btn-nova-materia">+ Nova matéria</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid-3" style="margin-bottom:20px;">
+        <div class="stat-card">
+          <div class="stat-label">Matérias</div>
+          <div class="stat-value" id="stat-materias">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Atividades</div>
+          <div class="stat-value" id="stat-atividades">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Concluídas</div>
+          <div class="stat-value stat-green" id="stat-concluidas">0</div>
+        </div>
+      </div>
+
+      <!-- Progresso geral -->
+      <div class="card" style="margin-bottom:20px;">
+        <div class="progress-wrap">
+          <div class="progress-row">
+            <span style="font-weight:600;font-size:.88rem;">Progresso geral</span>
+            <span id="pct-geral" style="font-size:.88rem;color:var(--muted);">0%</span>
+          </div>
+          <div class="progress-bar" style="height:8px;">
+            <div class="progress-fill" id="prog-geral" style="width:0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de matérias -->
+      <div id="lista-materias">
+        <div class="loading-state"><div class="spinner"></div> Carregando…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal nova/editar matéria -->
+<div class="modal-overlay" id="modal-materia">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-mat-titulo">Nova matéria</h2>
+      <button class="btn-icon" id="modal-mat-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="mat-nome">Nome da matéria</label>
+        <input type="text" id="mat-nome" placeholder="Ex: Cálculo II, Direito Civil…">
+      </div>
+      <div class="form-group">
+        <label>Cor de identificação</label>
+        <div id="color-picker" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+      </div>
+      <button class="btn btn-primary" id="btn-salvar-materia" style="width:100%;">Criar matéria</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="src/js/sidebar.js"></script>
+<script src="src/js/firebase-config.js"></script>
+<script src="src/js/utils.js"></script>
+<script src="src/js/estudos.js"></script>
+</body>
+</html>
