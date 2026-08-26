@@ -8,6 +8,16 @@ const MESES_CURTOS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out
 
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
+/* Converte hex (#rrggbb) em rgba com alpha, pra gerar fundos suaves a partir
+   de uma cor de categoria escolhida dinamicamente pelo usuário. */
+function hexToRgba(hex, alpha = 1) {
+  if (!hex) return `rgba(140,136,128,${alpha})`;
+  const h = hex.replace('#','');
+  const bigint = parseInt(h.length === 3 ? h.split('').map(c=>c+c).join('') : h, 16);
+  const r = (bigint >> 16) & 255, g = (bigint >> 8) & 255, b = bigint & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 function toast(msg, tipo = 'ok') {
   const el = document.getElementById('toast');
   if (!el) return;

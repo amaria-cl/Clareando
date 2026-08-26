@@ -9,9 +9,17 @@ const CORES_MAT = [
   '#9333ea','#d97706','#6b7280','#b05c2e',
 ];
 
+const TIPOS_MAT = [
+  { valor:'faculdade', label:'Faculdade', icon:'🎓' },
+  { valor:'idioma',    label:'Idiomas',   icon:'🌍' },
+  { valor:'curso',     label:'Cursos',    icon:'🧩' },
+];
+function getTipoMat(v) { return TIPOS_MAT.find(t => t.valor === v) || TIPOS_MAT[0]; }
+
 let materias   = [];
 let atividades = [];
-let editMateriaId = null;
+let editMateriaId  = null;
+let tabAtiva       = 'todos';
 
 /* ── Color picker ────────────────────────────── */
 function renderColorPicker(corAtiva) {
@@ -54,16 +62,26 @@ function iniciar() {
   }, err => console.error('Erro atividades:', err));
 }
 
-/* ── Stats ───────────────────────────────────── */
+/* ── Stats (respeitam a aba ativa) ────────────── */
 function atualizarStats() {
-  const total   = atividades.length;
-  const concl   = atividades.filter(a => a.concluida).length;
+  const matsFiltradas = materiasDaAba();
+  const idsFiltrados  = new Set(matsFiltradas.map(m => m.id));
+  const atvsFiltradas = atividades.filter(a => idsFiltrados.has(a.materiaId));
+
+  const total   = atvsFiltradas.length;
+  const concl   = atvsFiltradas.filter(a => a.concluida).length;
   const pct     = total > 0 ? Math.round((concl / total) * 100) : 0;
-  document.getElementById('stat-materias').textContent   = materias.length;
+  document.getElementById('stat-materias').textContent   = matsFiltradas.length;
   document.getElementById('stat-atividades').textContent = total;
   document.getElementById('stat-concluidas').textContent = concl;
   document.getElementById('pct-geral').textContent       = pct + '%';
   document.getElementById('prog-geral').style.width      = pct + '%';
+}
+
+/* ── Aba ativa ─────────────────────────────────── */
+function materiasDaAba() {
+  if (tabAtiva === 'todos') return materias;
+  return materias.filter(m => (m.tipo || 'faculdade') === tabAtiva);
 }
 
 /* ── Render lista ────────────────────────────── */
@@ -71,13 +89,19 @@ function renderLista() {
   const el = document.getElementById('lista-materias');
   if (!el) return;
 
+  const listaAba = materiasDaAba();
+
   if (materias.length === 0) {
     emptyState(el, '📚', 'Nenhuma matéria ainda', 'Clique em "+ Nova matéria" para começar');
     return;
   }
+  if (listaAba.length === 0) {
+    emptyState(el, getTipoMat(tabAtiva).icon || '📚', 'Nada por aqui ainda', 'Clique em "+ Nova matéria" para adicionar');
+    return;
+  }
 
   el.innerHTML = '';
-  materias.forEach(mat => {
+  listaAba.forEach(mat => {
     const atvMat  = atividades.filter(a => a.materiaId === mat.id);
     const concl   = atvMat.filter(a => a.concluida).length;
     const pct     = atvMat.length > 0 ? Math.round((concl / atvMat.length) * 100) : 0;
@@ -89,6 +113,7 @@ function renderLista() {
       <div class="materia-header">
         <div class="materia-dot" style="background:${mat.cor};"></div>
         <span class="materia-name">${mat.nome}</span>
+        ${tabAtiva === 'todos' ? `<span class="tag tag-muted" style="margin-right:4px;">${getTipoMat(mat.tipo || 'faculdade').icon} ${getTipoMat(mat.tipo || 'faculdade').label}</span>` : ''}
         <div class="materia-meta">
           <div class="materia-prog-bar">
             <div class="materia-prog-fill" style="width:${pct}%;background:${mat.cor};"></div>
@@ -186,16 +211,17 @@ function renderFormAtv(matId) {
 async function salvarMateria() {
   const nome = document.getElementById('mat-nome').value.trim();
   const cor  = getCorAtiva();
+  const tipo = document.getElementById('mat-tipo')?.value || 'faculdade';
   if (!nome) { toast('Informe o nome da matéria.', 'erro'); return; }
 
   const btn = document.getElementById('btn-salvar-materia');
   btn.disabled = true; btn.textContent = 'Salvando…';
   try {
     if (editMateriaId) {
-      await db.collection('materias').doc(editMateriaId).update({ nome, cor });
+      await db.collection('materias').doc(editMateriaId).update({ nome, cor, tipo });
       toast('Matéria atualizada ✓');
     } else {
-      await db.collection('materias').add({ nome, cor, criadoEm: new Date().toISOString() });
+      await db.collection('materias').add({ nome, cor, tipo, criadoEm: new Date().toISOString() });
       toast('Matéria criada ✓');
     }
     fecharModal();
@@ -255,12 +281,20 @@ async function deletarAtv(id) {
 }
 
 /* ── Modal ───────────────────────────────────── */
+function preencherTipos() {
+  const el = document.getElementById('mat-tipo');
+  if (!el) return;
+  el.innerHTML = TIPOS_MAT.map(t => `<option value="${t.valor}">${t.icon} ${t.label}</option>`).join('');
+}
+
 function abrirModalNova() {
   editMateriaId = null;
   document.getElementById('modal-mat-titulo').textContent = 'Nova matéria';
   document.getElementById('mat-nome').value = '';
   document.getElementById('btn-salvar-materia').textContent = 'Criar matéria';
   renderColorPicker(CORES_MAT[0]);
+  const tipoEl = document.getElementById('mat-tipo');
+  if (tipoEl) tipoEl.value = tabAtiva !== 'todos' ? tabAtiva : 'faculdade';
   document.getElementById('modal-materia').classList.add('open');
   setTimeout(() => document.getElementById('mat-nome').focus(), 100);
 }
@@ -271,6 +305,8 @@ function abrirModalEditar(mat) {
   document.getElementById('mat-nome').value = mat.nome;
   document.getElementById('btn-salvar-materia').textContent = 'Salvar';
   renderColorPicker(mat.cor);
+  const tipoEl = document.getElementById('mat-tipo');
+  if (tipoEl) tipoEl.value = mat.tipo || 'faculdade';
   document.getElementById('modal-materia').classList.add('open');
 }
 
@@ -280,6 +316,18 @@ function fecharModal() {
 
 /* ── Init ────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
+  preencherTipos();
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      tabAtiva = btn.dataset.tab;
+      atualizarStats();
+      renderLista();
+    });
+  });
+
   document.getElementById('btn-nova-materia').addEventListener('click', abrirModalNova);
   document.getElementById('modal-mat-close').addEventListener('click', fecharModal);
   document.getElementById('modal-materia').addEventListener('click', e => { if (e.target === e.currentTarget) fecharModal(); });
