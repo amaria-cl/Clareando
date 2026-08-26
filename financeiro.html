@@ -52,7 +52,7 @@
 
       <!-- Dashboard -->
       <div class="tab-panel active" id="tab-dashboard">
-        <div class="grid-2" style="gap:20px;">
+        <div class="grid-2" style="gap:20px;margin-bottom:20px;">
           <div class="card">
             <div class="card-title">Fluxo por categoria — <span id="chart-label"></span></div>
             <div class="bar-chart-wrap" id="bar-chart"></div>
@@ -62,6 +62,16 @@
             <div id="cat-breakdown"></div>
           </div>
         </div>
+        <div class="grid-2" style="gap:20px;">
+          <div class="card">
+            <div class="card-title">💳 Cartão x fora do cartão</div>
+            <div id="forma-breakdown"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">🏷️ Por etiqueta</div>
+            <div id="etiquetas-breakdown"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Lançamentos -->
@@ -69,16 +79,18 @@
         <div class="filtros-row">
           <select id="fil-tipo"><option value="">Todos</option><option value="entrada">↑ Entradas</option><option value="saida">↓ Saídas</option></select>
           <select id="fil-cat"><option value="">Todas as categorias</option></select>
+          <select id="fil-forma"><option value="">Todas as formas</option></select>
+          <select id="fil-etiqueta"><option value="">Todas as etiquetas</option></select>
           <span id="fil-count" style="margin-left:auto;font-size:.82rem;color:var(--muted);"></span>
         </div>
         <div class="excel-wrap">
           <table class="excel-table">
             <thead>
               <tr>
-                <th>Descrição</th><th>Valor</th><th>Tipo</th><th>Categoria</th><th>Data</th><th style="width:36px;"></th>
+                <th>Descrição</th><th>Valor</th><th>Tipo</th><th>Categoria</th><th>Forma</th><th>Etiquetas</th><th>Data</th><th style="width:36px;"></th>
               </tr>
             </thead>
-            <tbody id="tabela-lanc"><tr><td colspan="6" style="padding:20px;"><div class="loading-state"><div class="spinner"></div></div></td></tr></tbody>
+            <tbody id="tabela-lanc"><tr><td colspan="8" style="padding:20px;"><div class="loading-state"><div class="spinner"></div></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -94,8 +106,8 @@
         </div>
         <div class="excel-wrap">
           <table class="excel-table">
-            <thead><tr><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Categoria</th><th style="width:36px;"></th></tr></thead>
-            <tbody id="tabela-fixas"><tr><td colspan="5" style="padding:20px;"><div class="loading-state"><div class="spinner"></div></div></td></tr></tbody>
+            <thead><tr><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Categoria</th><th>Forma</th><th style="width:36px;"></th></tr></thead>
+            <tbody id="tabela-fixas"><tr><td colspan="6" style="padding:20px;"><div class="loading-state"><div class="spinner"></div></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -135,6 +147,16 @@
           <input type="date" id="lanc-data">
         </div>
       </div>
+      <div id="saida-fields">
+        <div class="form-group">
+          <label>Forma de pagamento</label>
+          <select id="lanc-forma"></select>
+        </div>
+        <div class="form-group">
+          <label for="lanc-etiquetas">Etiquetas (opcional)</label>
+          <input type="text" id="lanc-etiquetas" placeholder="Ex: Reforma, Reembolsar mãe…">
+        </div>
+      </div>
       <div class="form-group">
         <label><input type="checkbox" id="lanc-fixa" style="width:auto;accent-color:var(--green);"> &nbsp;Salvar como conta fixa também</label>
       </div>
@@ -157,6 +179,7 @@
         <div class="form-group"><label>Dia vencimento</label><input type="number" id="fixa-venc" min="1" max="31" placeholder="Ex: 5"></div>
       </div>
       <div class="form-group"><label>Categoria</label><select id="fixa-cat"></select></div>
+      <div class="form-group"><label>Forma de pagamento</label><select id="fixa-forma"></select></div>
       <button class="btn btn-primary" id="btn-salvar-fixa" style="width:100%;">Salvar conta fixa</button>
     </div>
   </div>

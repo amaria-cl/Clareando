@@ -14,6 +14,7 @@
       <span class="topbar-title">📅 Agenda</span>
       <div class="topbar-right">
         <span class="topbar-date" id="topbar-date"></span>
+        <button class="btn btn-secondary btn-sm" id="btn-categorias">🏷️ Categorias</button>
         <button class="btn btn-primary btn-sm" id="btn-novo-evento">+ Novo evento</button>
       </div>
     </header>
@@ -96,12 +97,7 @@
         </div>
         <div class="form-group">
           <label for="ev-cat">Categoria</label>
-          <select id="ev-cat">
-            <option value="pessoal">🟢 Pessoal</option>
-            <option value="importante">🟠 Importante</option>
-            <option value="urgente">🔴 Urgente</option>
-            <option value="faculdade">🔵 Faculdade</option>
-          </select>
+          <select id="ev-cat"></select>
         </div>
       </div>
       <div class="form-group">
@@ -124,6 +120,30 @@
         <input type="text" id="ev-obs" placeholder="Detalhes adicionais…">
       </div>
       <button class="btn btn-primary" id="btn-salvar-ev" style="width:100%;">+ Salvar evento</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal categorias -->
+<div class="modal-overlay" id="modal-categorias">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Categorias da agenda</h2>
+      <button class="btn-icon" id="modal-cat-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="lista-categorias" style="margin-bottom:16px;max-height:220px;overflow-y:auto;"></div>
+      <div style="border-top:1px solid var(--border);padding-top:14px;">
+        <div class="form-group">
+          <label id="cat-form-titulo">Nova categoria</label>
+          <input type="text" id="cat-nome" placeholder="Ex: Trabalho, Forró, Namorada…">
+        </div>
+        <div class="form-group">
+          <label>Cor</label>
+          <div id="cat-color-picker" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+        </div>
+        <button class="btn btn-primary" id="btn-salvar-cat" style="width:100%;">+ Adicionar</button>
+      </div>
     </div>
   </div>
 </div>

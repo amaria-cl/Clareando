@@ -55,6 +55,13 @@
         </div>
       </div>
 
+      <div class="tabs-bar">
+        <button class="tab-btn active" data-tab="todos">📋 Tudo</button>
+        <button class="tab-btn" data-tab="faculdade">🎓 Faculdade</button>
+        <button class="tab-btn" data-tab="idioma">🌍 Idiomas</button>
+        <button class="tab-btn" data-tab="curso">🧩 Cursos</button>
+      </div>
+
       <!-- Lista de matérias -->
       <div id="lista-materias">
         <div class="loading-state"><div class="spinner"></div> Carregando…</div>
@@ -73,7 +80,11 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="mat-nome">Nome da matéria</label>
-        <input type="text" id="mat-nome" placeholder="Ex: Cálculo II, Direito Civil…">
+        <input type="text" id="mat-nome" placeholder="Ex: Cálculo II, Inglês, Excel avançado…">
+      </div>
+      <div class="form-group">
+        <label for="mat-tipo">Tipo</label>
+        <select id="mat-tipo"></select>
       </div>
       <div class="form-group">
         <label>Cor de identificação</label>
