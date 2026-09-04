@@ -4,8 +4,9 @@
 
 const CATS = [
   { nome:'Salário',             icon:'💰', cor:'#2057c7', bg:'#dbeafe' },
-  { nome:'Moradia',             icon:'🏠', cor:'#3d7a52', bg:'#c8dbb0' },
-  { nome:'Alimentação',         icon:'🛒', cor:'#c47f17', bg:'#fef3c7' },
+  { nome:'Freelance',           icon:'💵', cor:'#20a6c7', bg:'#dbeafe' },
+  { nome:'Namoro',              icon:'❤️', cor:'#3d7a52', bg:'#c8dbb0' },
+  { nome:'Alimentação',         icon:'🛒', cor:'#c417a4', bg:'#fef3c7' },
   { nome:'Serviços domésticos', icon:'⚡', cor:'#6b35c7', bg:'#ede9fe' },
   { nome:'Mensalidades',        icon:'📱', cor:'#059669', bg:'#d1fae5' },
   { nome:'Gastos Pessoais',     icon:'👤', cor:'#b83232', bg:'#fee2e2' },
